@@ -16,9 +16,13 @@ The program is made to be as simple and straightforward as possible, with the de
 
 ## Requirements/Usage:
 
-At the time of this writing, FileOps depends on the following packages: pygubu, tkinter, pandas, os, segyio. Some operations depend on AWK, which is native in *nix systems but not in Windows, so if the latter is your preferred system, an environment such as MingW64 or WSL will be required. The Python version used for development and testing is 3.6 and, though 2.7 has worked so far, its use is discouraged as future operations might rely on newer features, so 3.x is recommended. Tested in Linux (x86-64 and ARM64) and macOS.
+At the time of this writing, FileOps depends on the following packages: pygubu, tkinter, pandas, os, segyio. Some operations depend on AWK, which is native in *nix systems but not in Windows, so if the latter is your preferred system, an environment such as MingW64 or WSL will be required. The Python version used for development and testing is 3.6 and, though 2.7 has worked so far, its use is discouraged as future operations might rely on newer features, so 3.x is recommended. Tested in Linux (x86-64 and ARM64) and macOS. The program is launched by "python FileOps.py" and the interface should show up.
 
-The program is launched by "python FileOps.py" and the interface should show up. Important to note that errors due to missing steps for a given operation, such as trying to run without selecting a file, or convert faults without providing survey and interpreter name, will show an error message, however, problems that happen out of the program will be reported by the Python interpreter in the terminal where it was launched. For example, trying to open a file that has no read permission, or writing to a directory that has no write permission or insufficient space left, are caught by Python and not by FileOps.
+![SEGY_Report](https://user-images.githubusercontent.com/82084498/128628826-52ca206d-6d9b-4d39-b158-4c197a1bfa55.jpg)
+
+![SEGY_Report](https://user-images.githubusercontent.com/82084498/128628826-52ca206d-6d9b-4d39-b158-4c197a1bfa55.jpg)
+
+Important to note that errors due to missing steps for a given operation, such as trying to run without selecting a file, or convert faults without providing survey and interpreter name, will show an error message, however, problems that happen out of the program will be reported by the Python interpreter in the terminal where it was launched. For example, trying to open a file that has no read permission, or writing to a directory that has no write permission or insufficient space left, are caught by Python and not by FileOps.
 
 GPU-based operations, such as the conversion of AVF file from Vrms to Vint, have additional dependencies explained in its own documentation, which also contains benchmarks and direct comparisons to other applications that do velocity conversion (though not from an AVF file to another AVF file). In environments where it is impractical to fulfil all the CUDA requirements for Linux computers, the easiest way is to use Windows instead.
 
