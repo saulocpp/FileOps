@@ -1,3 +1,5 @@
+07/08/2021
+
 ## LICENSE:
 
 This project is licensed under the terms of the "Creative Commons - No Derivatives" license (https://creativecommons.org/licenses/by-nd/4.0/).
@@ -18,7 +20,7 @@ At the time of this writing, FileOps depends on the following packages: pygubu, 
 
 ![Main_Window](https://user-images.githubusercontent.com/82084498/128628818-ebfa6410-7109-4687-9d01-e54cabd425e1.jpg)
 
-The main window shows the standard 1-2-3 steps of selecting the file(s), operation and running. Operations that require extra input will unlock the appropriate fields to be filled. The next screen shows a report with basic information of the selected SGYs and allow for saving it to text file.
+The main window shows the standard 1-2-3 steps of selecting the file(s), operation and running. New features will expand the section 2 and, as appropriate, the "Extra parameters" fields. The following screen shows a report with basic information of the selected SGYs and allow for saving it to text file.
 
 ![SEGY_Report](https://user-images.githubusercontent.com/82084498/128628826-52ca206d-6d9b-4d39-b158-4c197a1bfa55.jpg)
 
