@@ -1,5 +1,3 @@
-07/08/2021
-
 ## LICENSE:
 
 This project is licensed under the terms of the "Creative Commons - No Derivatives" license (https://creativecommons.org/licenses/by-nd/4.0/).
