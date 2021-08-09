@@ -36,6 +36,6 @@ In both cases, refer to the Enhancement section for relevant information.
 
 ## Enhancement:
 
-Enhancement requests are welcome but need to be well-founded and aligned with the objectives already mentioned. The proponent must clearly present a high and concrete demand as well as the benefits of a new operation. This means that "nice to have" features will be avoided, this helps keeping the code base compact and useful.
+Enhancement requests are welcome but need to be well-founded and aligned with the objectives already mentioned. The proponent must clearly present a high and concrete demand as well as the benefits of a new operation. This means that "nice to have" features will be avoided in order to keep the code base compact and useful.
 
 Operations present in other applications aren't candidates for implementation either. As mentioned before, FileOps is not intended to be the end-all tool for data handling or overlap with existing established applications, it is meant to complement them and serve as a time-saver for side tasks that are time-consuming for data management teams.
