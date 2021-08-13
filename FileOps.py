@@ -6,15 +6,17 @@ from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import ttk
 import tkinter.font as tkfont
+#from idlelib.Tooltip import * # Para tooltip, sudo apt install idle3, python -m idlelib
+#https://stackoverflow.com/questions/3221956/how-do-i-display-tooltips-in-tkinter/36221216#36221216
 import Faults_Charisma_to_OW as c2ow
 import Segy_Report as sgyrep
 import Vel_Operations as vel
 
 class FileOps_GUI:
 	def __init__(self):
-		self.builder = builder = pygubu.Builder()
-		builder.add_from_file("FileOps.ui")
-		self.main_tk				= builder.get_object("main_tk")
+		self.builder = builder = pygubu.Builder()								#1: Create a builder
+		builder.add_from_file("FileOps.ui")										#2: Load an ui file
+		self.main_tk				= builder.get_object("main_tk")				#3: Create the Toplevel/mainwindow, and objects go in a main frame
 		self.button_fileopen		= builder.get_object("button_fileopen")
 		self.button_clear			= builder.get_object("button_clear")
 		self.button_run				= builder.get_object("button_run")
@@ -35,8 +37,11 @@ class FileOps_GUI:
 		self.interp					= builder.get_variable("interp")
 		self.survey					= builder.get_variable("survey")
 		self.domain					= builder.get_variable("domain")
+		#self.main_tk.configure(class_='FileOpsHAHA')
+		#self.variables = UI_Variables()			# https://github.com/alejandroautalan/pygubu/commit/149724acfe7c3f2fb8518ab44219e34e2f0aa295
+		#builder.import_variables(self.variables)	# If many get_variable() calls are needed, see the URL above about using import_variables()
 
-	file_list = ""
+	file_list = ""		# In a function and no O.O., declare "global file_list" to avoid creating a local version
 
 	def open_file(self):
 		self.file_list = filedialog.askopenfilenames(filetypes = [("Data files", "*.dat *.DAT"), ("Text files", "*.txt *.TXT"), \
@@ -76,8 +81,8 @@ class FileOps_GUI:
 			child.config(state = "disable" if self.operation.get() != 1 else "normal")
 			self.dropdown_domain.config(state = "disable" if self.operation.get() != 1 else "readonly")
 
-	def limit_interp(self, entry_interp):
-		if len(self.entry_interp.get()) > 0:
+	def limit_interp(self, entry_interp):		# See the explanation to 2 parameters but passing only 1 when calling, if using O.O.:
+		if len(self.entry_interp.get()) > 0:	# https://stackoverflow.com/questions/23944657/typeerror-method-takes-1-positional-argument-but-2-were-given
 			self.interp.set(self.entry_interp.get()[:5])
 
 	def limit_survey(self, entry_survey):
@@ -86,10 +91,10 @@ class FileOps_GUI:
 
 	def config_objects(self):
 		self.main_tk.tk.call("wm", "iconphoto", self.main_tk._w, tk.PhotoImage(file = "FileOps.png"))
-		ttk.Style().theme_use("alt")
-		self.builder.connect_callbacks(self)
-		self.interp.trace("w", lambda *args: self.limit_interp(self.entry_interp))
-		self.survey.trace("w", lambda *args: self.limit_survey(self.entry_survey))
+		ttk.Style().theme_use("alt")	# "alt", "clam", "classic", "default"
+		self.builder.connect_callbacks(self)										# Set callbacks in UI file and connect them all here (must be defined before)
+		self.interp.trace("w", lambda *args: self.limit_interp(self.entry_interp))	# Tracks length of interp and limits it to 5 chars (OW fault format)
+		self.survey.trace("w", lambda *args: self.limit_survey(self.entry_survey))	# Tracks length of survey and limits it to 40 chars (OW fault format)
 		self.operation.set(1)
 		self.domain.set("TIME")
 		self.scrollh.config(command = self.listbox_files.xview)
@@ -97,7 +102,7 @@ class FileOps_GUI:
 		self.listbox_files.config(yscrollcommand = self.scrollv.set, xscrollcommand = self.scrollh.set)
 		self.button_run.config(height = 2, font = tkfont.Font(weight = "bold", size = 14))
 		self.button_about.config(command = lambda: tk.messagebox.showinfo("About FileOps", "Developed by: Saulo Silva\n\
-Geophysics Consultant\nHalliburton / Landmark\nsaulo.silva@halliburton.com, saulocpp@gmail.com"))
+Geophysics Consultant, saulocpp@gmail.com"))
 		self.button_quit.config(command = self.main_tk.destroy)
 
 	def run(self):
