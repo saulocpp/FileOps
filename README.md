@@ -1,6 +1,6 @@
 ## LICENSE:
 
-This project is licensed under the terms of the "Creative Commons - No Derivatives" license (https://creativecommons.org/licenses/by-nd/4.0/).
+This independent project is licensed under the terms of the "Creative Commons - No Derivatives" license (https://creativecommons.org/licenses/by-nd/4.0/).
 
 The program can be downloaded from the project page at Github (https://github.com/saulocpp/FileOps) and freely used, even for commercial purposes. The author owns the copyrights and intellectual property of the program and its sources. It is not allowed to sell, rent, lease, modify or include the source code, part or whole, into other programs, commercial or free.
 
@@ -14,7 +14,7 @@ The program is made to be as simple and straightforward as possible, with the de
 
 ## Requirements/Usage:
 
-At the time of this writing, FileOps depends on the following packages: <b>pygubu, tkinter, pandas, os, segyio</b>. Some operations depend on AWK, which is native in *nix systems but not in Windows, so if the latter is your preferred system, an environment such as MingW64 or WSL will be required. The Python version used for development and testing is 3.6 and, though 2.7 has worked so far, its use is discouraged as future operations might rely on newer features, so 3.x is recommended. Tested in Linux (x86-64 and ARM64), Windows 8.1/10 and macOS. The program is launched by "python FileOps.py" and the interface should show up.
+At the time of this writing, FileOps depends on the following packages: <b>pygubu, tkinter, pandas, os, segyio</b>. Some operations depend on AWK, which is native in *nix systems but not in Windows, so if the latter is your preferred system, an environment such as MingW64 or WSL will be required. The Python version used for development and testing is 3.6 and, though 2.7 has worked so far, its use is discouraged as future operations might rely on newer features, so 3.x is recommended. Tested in Linux (x86-64 and ARM64), Windows 8.1/10 and macOS. The program is launched by "<b>python FileOps.py</b>" and the interface should show up.
 
 ![Main_Window](https://user-images.githubusercontent.com/82084498/128628818-ebfa6410-7109-4687-9d01-e54cabd425e1.jpg)
 
