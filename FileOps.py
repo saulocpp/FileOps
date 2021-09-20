@@ -6,17 +6,15 @@ from tkinter import filedialog
 from tkinter import messagebox
 from tkinter import ttk
 import tkinter.font as tkfont
-#from idlelib.Tooltip import * # Para tooltip, sudo apt install idle3, python -m idlelib
-#https://stackoverflow.com/questions/3221956/how-do-i-display-tooltips-in-tkinter/36221216#36221216
 import Faults_Charisma_to_OW as c2ow
 import Segy_Report as sgyrep
 import Vel_Operations as vel
 
 class FileOps_GUI:
 	def __init__(self):
-		self.builder = builder = pygubu.Builder()								#1: Create a builder
-		builder.add_from_file("FileOps.ui")										#2: Load an ui file
-		self.main_tk				= builder.get_object("main_tk")				#3: Create the Toplevel/mainwindow, and objects go in a main frame
+		self.builder = builder = pygubu.Builder()
+		builder.add_from_file("FileOps.ui")
+		self.main_tk				= builder.get_object("main_tk")
 		self.button_fileopen		= builder.get_object("button_fileopen")
 		self.button_clear			= builder.get_object("button_clear")
 		self.button_run				= builder.get_object("button_run")
@@ -28,7 +26,8 @@ class FileOps_GUI:
 		self.radio_flt_charisma2ow	= builder.get_object("radio_flt_charisma2ow")
 		self.radio_split_td_well	= builder.get_object("radio_split_td_well")
 		self.radio_sgy_report		= builder.get_object("radio_sgy_report")
-		self.radio_vrms2vint		= builder.get_object("radio_vrms2vint")
+		self.radio_vrms2vint_avf	= builder.get_object("radio_vrms2vint_avf")
+		self.radio_vrms2vint_xytv	= builder.get_object("radio_vrms2vint_xytv")
 		self.frame_extraparams		= builder.get_object("frame_extraparams")
 		self.entry_interp			= builder.get_object("entry_interp")
 		self.entry_survey			= builder.get_object("entry_survey")
@@ -37,15 +36,12 @@ class FileOps_GUI:
 		self.interp					= builder.get_variable("interp")
 		self.survey					= builder.get_variable("survey")
 		self.domain					= builder.get_variable("domain")
-		#self.main_tk.configure(class_='FileOpsHAHA')
-		#self.variables = UI_Variables()			# https://github.com/alejandroautalan/pygubu/commit/149724acfe7c3f2fb8518ab44219e34e2f0aa295
-		#builder.import_variables(self.variables)	# If many get_variable() calls are needed, see the URL above about using import_variables()
 
-	file_list = ""		# In a function and no O.O., declare "global file_list" to avoid creating a local version
+	file_list = ""
 
 	def open_file(self):
 		self.file_list = filedialog.askopenfilenames(filetypes = [("Data files", "*.dat *.DAT"), ("Text files", "*.txt *.TXT"), \
-			("SEG-Y files", "*.segy *.sgy *.SGY *.SEGY"), ("Velocity files", "*.avf *.AVF"), ("All files", "*")])
+			("SEG-Y files", "*.segy *.sgy *.SGY *.SEGY"), ("Velocity files", "*.avf *.AVF *.xytv *.XYTV"), ("All files", "*")])
 		if(len(self.file_list) != 0):
 			self.listbox_files.delete(0, END)
 			for item in self.file_list:
@@ -72,7 +68,9 @@ class FileOps_GUI:
 		elif(self.operation.get() == 3):
 			sgyrep.sgy_report(self.main_tk, self.file_list)
 		elif(self.operation.get() == 4):
-			vel.avf_vrms2vint(self.file_list)
+			vel.vrms2vint('A', self.file_list)
+		elif(self.operation.get() == 5):
+			vel.vrms2vint('X', self.file_list)
 		else:
 			tk.messagebox.showerror("Unable to run operation", "Strange error occurred. Invalid operation value passed, please contact the developer.")
 
@@ -81,8 +79,8 @@ class FileOps_GUI:
 			child.config(state = "disable" if self.operation.get() != 1 else "normal")
 			self.dropdown_domain.config(state = "disable" if self.operation.get() != 1 else "readonly")
 
-	def limit_interp(self, entry_interp):		# See the explanation to 2 parameters but passing only 1 when calling, if using O.O.:
-		if len(self.entry_interp.get()) > 0:	# https://stackoverflow.com/questions/23944657/typeerror-method-takes-1-positional-argument-but-2-were-given
+	def limit_interp(self, entry_interp):
+		if len(self.entry_interp.get()) > 0:
 			self.interp.set(self.entry_interp.get()[:5])
 
 	def limit_survey(self, entry_survey):
@@ -91,10 +89,10 @@ class FileOps_GUI:
 
 	def config_objects(self):
 		self.main_tk.tk.call("wm", "iconphoto", self.main_tk._w, tk.PhotoImage(file = "FileOps.png"))
-		ttk.Style().theme_use("alt")	# "alt", "clam", "classic", "default"
-		self.builder.connect_callbacks(self)										# Set callbacks in UI file and connect them all here (must be defined before)
-		self.interp.trace("w", lambda *args: self.limit_interp(self.entry_interp))	# Tracks length of interp and limits it to 5 chars (OW fault format)
-		self.survey.trace("w", lambda *args: self.limit_survey(self.entry_survey))	# Tracks length of survey and limits it to 40 chars (OW fault format)
+		ttk.Style().theme_use("alt")
+		self.builder.connect_callbacks(self)
+		self.interp.trace("w", lambda *args: self.limit_interp(self.entry_interp))
+		self.survey.trace("w", lambda *args: self.limit_survey(self.entry_survey))
 		self.operation.set(1)
 		self.domain.set("TIME")
 		self.scrollh.config(command = self.listbox_files.xview)

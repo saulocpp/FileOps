@@ -21,7 +21,7 @@
                 <property cbtype="simple" name="command" type="command">open_file</property>
                 <property name="text" translatable="yes">1 - Select file(s)</property>
                 <layout manager="pack">
-                  <property name="padx">40</property>
+                  <property name="padx">50</property>
                   <property name="pady">10</property>
                   <property name="propagate">True</property>
                   <property name="side">left</property>
@@ -33,7 +33,7 @@
                 <property cbtype="simple" name="command" type="command">clear_all</property>
                 <property name="text" translatable="yes">Clear selection</property>
                 <layout manager="pack">
-                  <property name="padx">40</property>
+                  <property name="padx">50</property>
                   <property name="propagate">True</property>
                   <property name="side">right</property>
                 </layout>
@@ -149,7 +149,7 @@
                 <child>
                   <object class="ttk.Radiobutton" id="radio_split_td_well">
                     <property cbtype="simple" name="command" type="command">extra_params</property>
-                    <property name="text" translatable="yes">Split OpenWorks well/TD file into individudal files</property>
+                    <property name="text" translatable="yes">Split OpenWorks well/TD file into individudal files (AWK)</property>
                     <property name="value">2</property>
                     <property name="variable">int:operation</property>
                     <layout manager="pack">
@@ -173,10 +173,23 @@
                   </object>
                 </child>
                 <child>
-                  <object class="ttk.Radiobutton" id="radio_vrms2vint">
+                  <object class="ttk.Radiobutton" id="radio_vrms2vint_avf">
                     <property cbtype="simple" name="command" type="command">extra_params</property>
                     <property name="text" translatable="yes">Convert AVF from RMS to Interval velocity (GPU)</property>
                     <property name="value">4</property>
+                    <property name="variable">int:operation</property>
+                    <layout manager="pack">
+                      <property name="anchor">w</property>
+                      <property name="propagate">True</property>
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Radiobutton" id="radio_vrms2vint_xytv">
+                    <property cbtype="simple" name="command" type="command">extra_params</property>
+                    <property name="text" translatable="yes">Convert XYTV from RMS to Interval velocity (GPU)</property>
+                    <property name="value">5</property>
                     <property name="variable">int:operation</property>
                     <layout manager="pack">
                       <property name="anchor">w</property>
