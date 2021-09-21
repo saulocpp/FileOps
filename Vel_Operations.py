@@ -21,7 +21,7 @@ def vrms2vint(input_type, file_list):
 	lib_gpuops = cdll.LoadLibrary(lib_name)
 	if(lib_gpuops.has_CUDA30_GPU() == 0):
 		for file_name in file_list:
-			if(lib_gpuops.Vrms2Vint((input_type).encode('utf-8'), (file_name).encode('utf-8'), \
+			if(lib_gpuops.Vrms2Vint(ctypes.c_char(input_type.encode('utf-8')), (file_name).encode('utf-8'), \
 				(os.path.splitext(file_name)[0] + "_converted_to_Vint" + os.path.splitext(file_name)[1]).encode('utf-8')) != 0):
 				tk.messagebox.showerror("Vrms -> Vint", "Unable to process file " + file_name + ", check the terminal for more information on the error.")
 	else:
