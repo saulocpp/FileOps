@@ -9,6 +9,7 @@ import tkinter.font as tkfont
 import Faults_Charisma_to_OW as c2ow
 import Segy_Report as sgyrep
 import Vel_Operations as vel
+import Hrz_Join_Deli_to_OW as d2ow
 
 class FileOps_GUI:
 	def __init__(self):
@@ -28,19 +29,25 @@ class FileOps_GUI:
 		self.radio_sgy_report		= builder.get_object("radio_sgy_report")
 		self.radio_vrms2vint_avf	= builder.get_object("radio_vrms2vint_avf")
 		self.radio_vrms2vint_xytv	= builder.get_object("radio_vrms2vint_xytv")
+		self.radio_split_ow_deli	= builder.get_object("radio_split_ow_deli")
+		self.radio_join_deli_ow		= builder.get_object("radio_join_deli_ow")
 		self.frame_extraparams		= builder.get_object("frame_extraparams")
 		self.entry_interp			= builder.get_object("entry_interp")
 		self.entry_survey			= builder.get_object("entry_survey")
 		self.dropdown_domain		= builder.get_object("dropdown_domain")
+		self.dropdown_attrib		= builder.get_object("dropdown_attrib")
+		self.dropdown_onset			= builder.get_object("dropdown_onset")
 		self.operation				= builder.get_variable("operation")
 		self.interp					= builder.get_variable("interp")
 		self.survey					= builder.get_variable("survey")
 		self.domain					= builder.get_variable("domain")
+		self.onset					= builder.get_variable("onset")
+		self.attrib					= builder.get_variable("attrib")
 
 	file_list = ""
 
 	def open_file(self):
-		self.file_list = filedialog.askopenfilenames(filetypes = [("Data files", "*.dat *.DAT"), ("Text files", "*.txt *.TXT"), \
+		self.file_list = filedialog.askopenfilenames(filetypes = [("Data files", "*.dat *.DAT"), ("CSV files", "*.csv, *.CSV"), ("Text files", "*.txt *.TXT"), \
 			("SEG-Y files", "*.segy *.sgy *.SGY *.SEGY"), ("Velocity files", "*.avf *.AVF *.xytv *.XYTV"), ("All files", "*")])
 		if(len(self.file_list) != 0):
 			self.listbox_files.delete(0, END)
@@ -71,13 +78,35 @@ class FileOps_GUI:
 			vel.vrms2vint('A', self.file_list)
 		elif(self.operation.get() == 5):
 			vel.vrms2vint('X', self.file_list)
+		elif(self.operation.get() == 6):
+			for file_name in self.file_list:
+				os.system("awk -f Split_OW_Hrz_to_Deli.awk " + file_name)
+		elif(self.operation.get() == 7):
+			d2ow.hrz_deli2ow(self.file_list, self.entry_interp.get(), self.entry_survey.get(), self.domain.get(), self.attrib.get(), self.onset.get())
 		else:
 			tk.messagebox.showerror("Unable to run operation", "Strange error occurred. Invalid operation value passed, please contact the developer.")
 
+	# Change to a switch-case structure when Python 3.10 is available
 	def extra_params(self):
-		for child in self.frame_extraparams.winfo_children():
-			child.config(state = "disable" if self.operation.get() != 1 else "normal")
-			self.dropdown_domain.config(state = "disable" if self.operation.get() != 1 else "readonly")
+		oper = self.operation.get()
+		if(oper == 1):
+			for child in self.frame_extraparams.winfo_children():
+				child.config(state = "normal")
+			self.dropdown_domain.config(state = "readonly")
+			self.dropdown_attrib.config(state = "disable")
+			self.dropdown_onset.config(state = "disable")
+		elif(oper == 7):
+			for child in self.frame_extraparams.winfo_children():
+				child.config(state = "normal")
+			self.dropdown_domain.config(state = "readonly")
+			self.dropdown_attrib.config(state = "readonly")
+			self.dropdown_onset.config(state = "readonly")
+		else:
+			for child in self.frame_extraparams.winfo_children():
+				child.config(state = "disable")
+			self.dropdown_domain.config(state = "disable")
+			self.dropdown_attrib.config(state = "disable")
+			self.dropdown_onset.config(state = "disable")
 
 	def limit_interp(self, entry_interp):
 		if len(self.entry_interp.get()) > 0:
@@ -95,6 +124,8 @@ class FileOps_GUI:
 		self.survey.trace("w", lambda *args: self.limit_survey(self.entry_survey))
 		self.operation.set(1)
 		self.domain.set("TIME")
+		self.onset.set("MINIMUM")
+		self.attrib.set("TIME_STRUCTURE")
 		self.scrollh.config(command = self.listbox_files.xview)
 		self.scrollv.config(command = self.listbox_files.yview)
 		self.listbox_files.config(yscrollcommand = self.scrollv.set, xscrollcommand = self.scrollh.set)
@@ -109,4 +140,5 @@ Geophysics Consultant, saulocpp@gmail.com"))
 if __name__ == '__main__':
 	fileops = FileOps_GUI()
 	fileops.config_objects()
+	fileops.extra_params()
 	fileops.run()
