@@ -19,7 +19,7 @@ def hrz_deli2ow(file_list, interp, survey, domain, onset, attribute):
 			deli			= csv.read_csv(file_name, read_options = readoptions, convert_options = convertoptions)
 			LINE_COUNT		= deli.num_rows
 			INTERP_NAME		= interp + " " * (9 - len(interp))
-			DOMAIN			= domain + " " * (9 if len(domain) == 5 else 10)
+			DOMAIN			= domain + " " * (10 if len(domain) == 5 else 11)
 			ATTRIBUTE		= attribute + " " * (40 - len(attribute))
 			HRZ_NAME		= os.path.basename(os.path.splitext(file_name)[0])
 			HRZ_NAME		= HRZ_NAME[:60] if len(HRZ_NAME) > 60 else HRZ_NAME + " " * (60 - len(HRZ_NAME))
