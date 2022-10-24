@@ -13,9 +13,9 @@ import Hrz_Join_Deli_to_OW as d2ow
 
 class FileOps_GUI:
 	def __init__(self):
-		self.builder = builder = pygubu.Builder()
-		builder.add_from_file("FileOps.ui")
-		self.main_tk				= builder.get_object("main_tk")
+		self.builder = builder = pygubu.Builder()								#1: Create a builder
+		builder.add_from_file("FileOps.ui")										#2: Load an ui file
+		self.main_tk				= builder.get_object("main_tk")				#3: Create the Toplevel/mainwindow, and objects go in a main frame
 		self.button_fileopen		= builder.get_object("button_fileopen")
 		self.button_clear			= builder.get_object("button_clear")
 		self.button_run				= builder.get_object("button_run")
@@ -35,14 +35,12 @@ class FileOps_GUI:
 		self.entry_interp			= builder.get_object("entry_interp")
 		self.entry_survey			= builder.get_object("entry_survey")
 		self.dropdown_domain		= builder.get_object("dropdown_domain")
-		self.dropdown_attrib		= builder.get_object("dropdown_attrib")
 		self.dropdown_onset			= builder.get_object("dropdown_onset")
 		self.operation				= builder.get_variable("operation")
 		self.interp					= builder.get_variable("interp")
 		self.survey					= builder.get_variable("survey")
 		self.domain					= builder.get_variable("domain")
 		self.onset					= builder.get_variable("onset")
-		self.attrib					= builder.get_variable("attrib")
 
 	file_list = ""
 
@@ -82,7 +80,7 @@ class FileOps_GUI:
 			for file_name in self.file_list:
 				os.system("awk -f Split_OW_Hrz_to_Deli.awk " + file_name)
 		elif(self.operation.get() == 7):
-			d2ow.hrz_deli2ow(self.file_list, self.entry_interp.get(), self.entry_survey.get(), self.domain.get(), self.attrib.get(), self.onset.get())
+			d2ow.hrz_deli2ow(self.file_list, self.entry_interp.get(), self.entry_survey.get(), self.domain.get(), self.onset.get())
 		else:
 			tk.messagebox.showerror("Unable to run operation", "Strange error occurred. Invalid operation value passed, please contact the developer.")
 
@@ -93,19 +91,16 @@ class FileOps_GUI:
 			for child in self.frame_extraparams.winfo_children():
 				child.config(state = "normal")
 			self.dropdown_domain.config(state = "readonly")
-			self.dropdown_attrib.config(state = "disable")
 			self.dropdown_onset.config(state = "disable")
 		elif(oper == 7):
 			for child in self.frame_extraparams.winfo_children():
 				child.config(state = "normal")
 			self.dropdown_domain.config(state = "readonly")
-			self.dropdown_attrib.config(state = "readonly")
 			self.dropdown_onset.config(state = "readonly")
 		else:
 			for child in self.frame_extraparams.winfo_children():
 				child.config(state = "disable")
 			self.dropdown_domain.config(state = "disable")
-			self.dropdown_attrib.config(state = "disable")
 			self.dropdown_onset.config(state = "disable")
 
 	def limit_interp(self, entry_interp):
@@ -118,14 +113,13 @@ class FileOps_GUI:
 
 	def config_objects(self):
 		self.main_tk.tk.call("wm", "iconphoto", self.main_tk._w, tk.PhotoImage(file = "FileOps.png"))
-		ttk.Style().theme_use("alt")
+		ttk.Style().theme_use("alt")		# "alt", "clam", "classic", "default"
 		self.builder.connect_callbacks(self)
 		self.interp.trace("w", lambda *args: self.limit_interp(self.entry_interp))
 		self.survey.trace("w", lambda *args: self.limit_survey(self.entry_survey))
 		self.operation.set(1)
 		self.domain.set("TIME")
 		self.onset.set("MINIMUM")
-		self.attrib.set("TIME_STRUCTURE")
 		self.scrollh.config(command = self.listbox_files.xview)
 		self.scrollv.config(command = self.listbox_files.yview)
 		self.listbox_files.config(yscrollcommand = self.scrollv.set, xscrollcommand = self.scrollh.set)
