@@ -36,6 +36,7 @@ class FileOps_GUI:
 		self.entry_survey			= builder.get_object("entry_survey")
 		self.dropdown_domain		= builder.get_object("dropdown_domain")
 		self.dropdown_onset			= builder.get_object("dropdown_onset")
+		self.dropdown_wstyle		= builder.get_object("dropdown_wstyle")
 		self.operation				= builder.get_variable("operation")
 		self.interp					= builder.get_variable("interp")
 		self.survey					= builder.get_variable("survey")
@@ -110,9 +111,11 @@ class FileOps_GUI:
 		if len(self.entry_survey.get()) > 0:
 			self.survey.set(self.entry_survey.get()[:40])
 
+	def apply_wstyle(self, dropdown_wstyle):
+		ttk.Style().theme_use(self.dropdown_wstyle.get())
+
 	def config_objects(self):
 		self.main_tk.tk.call("wm", "iconphoto", self.main_tk._w, tk.PhotoImage(file = "FileOps.png"))
-		ttk.Style().theme_use("alt")												# "alt", "clam", "classic", "default"
 		self.builder.connect_callbacks(self)
 		self.interp.trace("w", lambda *args: self.limit_interp(self.entry_interp))
 		self.survey.trace("w", lambda *args: self.limit_survey(self.entry_survey))
@@ -123,6 +126,8 @@ class FileOps_GUI:
 		self.scrollv.config(command = self.listbox_files.yview)
 		self.listbox_files.config(yscrollcommand = self.scrollv.set, xscrollcommand = self.scrollh.set)
 		self.button_run.config(height = 2, font = tkfont.Font(weight = "bold", size = 14))
+		self.dropdown_wstyle.set("default")
+		self.dropdown_wstyle.bind("<<ComboboxSelected>>", self.apply_wstyle)
 		self.button_about.config(command = lambda: tk.messagebox.showinfo("About FileOps", "Developed by: Saulo Silva\n\
 Geophysics Consultant, saulocpp@gmail.com"))
 		self.button_quit.config(command = self.main_tk.destroy)
