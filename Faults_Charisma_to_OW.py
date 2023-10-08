@@ -1,7 +1,8 @@
-# 06/01/2023
+# 08/10/2023
 # Python script to convert fault file in Charisma format to OpenWorks for loading with Data Import
 # The file can contain multiple faults, as exported by ErathNet or other apps, or one fault per file, as exported by Petrel
 # Written by Saulo Silva - saulocpp@gmail.com
+
 import os
 import pandas
 import numpy as np
@@ -31,24 +32,24 @@ def flt_charisma2ow(file_list, interp, survey, domain):
 	for file_name in file_list:
 		global charisma
 		charisma = pandas.read_csv(file_name, header = None, delim_whitespace = True, dtype = {"txt":str, "il":float, "xl":float, "x":float, "y":float, "z":float, "flt":str, "seg":int})
-		charisma.drop(charisma.columns[[0, 1, 2]], axis = "columns", inplace = True)
-		INTERP_NAME	= interp + " " * (5 - len(interp))
-		SURVEY_NAME	= survey + " " * (40 - len(survey))
+		charisma.drop(charisma.columns[[0, 1, 2]], axis = "columns", inplace = True)	# Drops the first 3 columns of the input data frame, since they are not needed
+		INTERP_NAME	= interp + " " * (5 - len(interp))									# Fills interp with spaces up to 5 characters
+		SURVEY_NAME	= survey + " " * (40 - len(survey))									# Fills survey with spaces up to 40 characters
 		DOMAIN		= domain + " " * (8 if len(domain) == 4 else 7)
 		c2ow_file, current_fault, xyz_pts, current_segment, file_line, segment_begin = "", "", "", 1, 0, 0
 
 		for file_line in range(len(charisma.index)):
 			if(current_fault != charisma.iloc[file_line, 3]):
-				if(file_line == (len(charisma.index) - 1) or file_line > 1):
+				if(file_line == (len(charisma.index) - 1) or file_line > 1):			# Writes the last segment of faults, not caught in the test below
 					Write_Segment_Info(INTERP_NAME, DOMAIN, xyz_pts[0], xyz_pts[1], xyz_pts[2], xyz_pts[3], xyz_pts[4], xyz_pts[5], xyz_pts[6], c2ow_file)
 					Write_Segment_Data(file_line - int(xyz_pts[6]), file_line, c2ow_file)
 				xyz_pts			= Reset_xyz_pts()
 				current_segment	= 1
-				current_fault	= charisma.iloc[file_line, 3]
-				OW_FAULT_NAME	= current_fault + " " * (60 - len(current_fault)) if len(current_fault) <= 50 else current_fault[0 : 49] + " " * 10
+				current_fault	= charisma.iloc[file_line, 3]							# Fault name below must go up to column 59 including spaces, Interp name begins at col 60
+				OW_FAULT_NAME	= current_fault + " " * (59 - len(current_fault)) if len(current_fault) <= 50 else current_fault[0 : 49] + " " * 9
 				c2ow_file		= open(os.path.dirname(file_name) + "/Charisma2OW_" + os.path.basename(current_fault), "w")
 				Write_Header(OW_FAULT_NAME, INTERP_NAME, SURVEY_NAME, DOMAIN, c2ow_file)
-			if(current_segment != charisma.iloc[file_line, 4]):
+			if(current_segment != charisma.iloc[file_line, 4]):		# This is not writing the last segment of each fault, with both values tested being 1 thus evaluating to false
 				Write_Segment_Info(INTERP_NAME, DOMAIN, xyz_pts[0], xyz_pts[1], xyz_pts[2], xyz_pts[3], xyz_pts[4], xyz_pts[5], xyz_pts[6], c2ow_file)
 				Write_Segment_Data(file_line - int(xyz_pts[6]), file_line, c2ow_file)
 				current_segment	= charisma.iloc[file_line, 4]
@@ -58,6 +59,7 @@ def flt_charisma2ow(file_list, interp, survey, domain):
 			xyz_pts[2], xyz_pts[3] = min(xyz_pts[2], charisma.iloc[file_line, 1]), max(xyz_pts[3], charisma.iloc[file_line, 1])
 			xyz_pts[4], xyz_pts[5] = min(xyz_pts[4], charisma.iloc[file_line, 2]), max(xyz_pts[5], charisma.iloc[file_line, 2])
 			xyz_pts[6] += 1
+		# Writes the last segment of the last fault in the file, not caught at the end of the above loop, but the loop limits have to be adjusted
 		Write_Segment_Info(INTERP_NAME, DOMAIN, xyz_pts[0], xyz_pts[1], xyz_pts[2], xyz_pts[3], xyz_pts[4], xyz_pts[5], xyz_pts[6], c2ow_file)
-		Write_Segment_Data(file_line + 1 - int(xyz_pts[6]), file_line + 1, c2ow_file)
+		Write_Segment_Data(file_line + 1 - int(xyz_pts[6]), file_line + 1, c2ow_file)	# Avoids picking the last point of the previous segment and picks the last point of the file
 
