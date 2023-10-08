@@ -14,7 +14,7 @@ The program is made to be as simple and straightforward as possible, with the de
 
 ## Requirements/Usage:
 
-At the time of this writing, FileOps depends on the following packages: <b>pygubu, tkinter, pandas, os, segyio</b>. Some operations depend on AWK, which is native in *nix systems but not in Windows, so if the latter is your preferred system, an environment such as MingW64 or WSL will be required. The Python version used for development and testing is 3.6, with 2.7 no longer supporting some of the more modern syntax 3.x. Tested in Linux (x86-64 and ARM64), Windows 8.1/10 and macOS. The program is launched by "<b>python FileOps.py</b>" and the interface should show up.
+At the time of this writing, FileOps depends on the following packages: <b>pygubu, tkinter, pandas, os, segyio, numpy, ctypes, platform, pyarrow</b>. Some operations depend on AWK, which is native in *nix systems but not in Windows, so if the latter is your preferred system, an environment such as MingW64 or WSL will be required. The Python version used for development and testing is 3.6, with 2.7 no longer supporting some of the more modern syntax 3.x. Tested in Linux (x86-64 and ARM64), Windows 8.1/10 and macOS. The program is launched by "<b>python FileOps.py</b>" and the interface should show up.
 
 ![Main_Window](https://user-images.githubusercontent.com/82084498/168159438-7ecc54b3-3edf-4d8f-8f01-dff4c289514a.jpg)
 
